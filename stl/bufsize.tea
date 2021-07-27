@@ -1,0 +1,53 @@
+[[ stl ]]
+
+// bufsize.tea
+//
+// MIT License
+//
+// Copyright (c) 2021 Ferhat Geçdoğan All Rights Reserved.
+// Distributed under the terms of the MIT License.
+//
+// var mut x: BufSize = [[ default ]]
+
+
+// There's no Gretea layer or FFI for POSIX
+[[ cpp ]] {
+    #include <sys/ioctl.h> \
+    #include <unistd.h>
+}
+
+import tea.green.type
+
+struct BufSize {
+    // mut
+    columns : uint32 [[ default = 0 ]] \
+    mut rows: uint32 [[ default = 0 ]]
+}
+
+module bufsize {
+    fn init() = BufSize {
+        var mut val: BufSize = [[ unsafe ]]
+
+        `if defined(TIOCGSIZE) {
+            var mut size: struct ttysize = [[ unsafe ]]
+
+            if ioctl(STDOUT_FILENO, TIOCGSIZE, &size) == 0 {
+                val.rows    = size.ts_lines
+                val.columns = size.ts_cols
+            [[ "}" ]]
+        } `else {
+            var mut size: struct winsize = [[ unsafe ]]
+            
+            if ioctl(STDIN_FILENO, TIOCGWINSZ, &size) == 0 {             
+                val.rows    = size.ws_row
+                val.columns = size.ws_col
+            [[ "}" ]]
+        } @
+
+        . val
+    }
+}
+
+compile default for BufSize {
+    bufsize#init()
+}
