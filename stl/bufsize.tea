@@ -25,7 +25,7 @@ struct BufSize {
 }
 
 module bufsize {
-    fn init() = BufSize {
+    fn bufsize#init() = BufSize {
         var mut val: BufSize = [[ unsafe ]]
 
         `if defined(TIOCGSIZE) {
@@ -46,7 +46,7 @@ module bufsize {
 
         . val
     }
-}
+} // bufsize
 
 compile default for BufSize {
     bufsize#init()
