@@ -1,5 +1,5 @@
 # bufsize[dot]tea
-## STL terminal buffer size info module that written in [Gretea](https://github.com/ferhatgec/gretea).
+## STL terminal buffer size info module written in [Gretea](https://github.com/ferhatgec/gretea).
 
 ```rust
 fn bufsize#init() = BufSize
